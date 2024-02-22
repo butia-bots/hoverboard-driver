@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   control_toolbox
   rosparam_shortcuts
+  serial
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -39,4 +41,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 add_dependencies(hoverboard_driver ${PROJECT_NAME}_gencfg)
+
+add_executable(base_comm src/base_comm.cpp)
+target_link_libraries(base_comm ${catkin_LIBRARIES})
 
