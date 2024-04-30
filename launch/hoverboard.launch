@@ -1,5 +1,6 @@
 <launch>
     <!-- Include this in your launch file to change port -->
+    <!-- <param name="port" type="str" value="/dev/ttySHARK"/> -->
     <param name="port" type="str" value="/dev/ttySHARK"/>
 
     <rosparam file="$(find hoverboard_driver)/config/hardware.yaml" command="load"/>
