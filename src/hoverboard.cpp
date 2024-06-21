@@ -40,6 +40,7 @@ Hoverboard::Hoverboard() {
     voltage_pub   = nh.advertise<std_msgs::Float64>("hoverboard/battery_voltage", 3);
     temp_pub      = nh.advertise<std_msgs::Float64>("hoverboard/temperature", 3);
     connected_pub = nh.advertise<std_msgs::Bool>("hoverboard/connected", 3);
+    emergency_button = nh.advertise<std_msgs::Bool>("emergency_button",0,true);
 
     std::size_t error = 0;
     error += !rosparam_shortcuts::get("hoverboard_driver", nh, "hoverboard_velocity_controller/wheel_radius", wheel_radius);
@@ -148,7 +149,8 @@ void Hoverboard::protocol_recv (char byte) {
 	        msg.wheelL_cnt ^
             msg.batVoltage ^
             msg.boardTemp ^
-            msg.cmdLed);
+            msg.cmdLed ^
+            msg.button_state);
 
         if (msg.start == START_FRAME && msg.checksum == checksum) {
             std_msgs::Float64 f;
@@ -164,6 +166,9 @@ void Hoverboard::protocol_recv (char byte) {
             joints[1].vel.data = direction_correction * (abs(msg.speedR_meas) * 0.10472);
             vel_pub[0].publish(joints[0].vel);
             vel_pub[1].publish(joints[1].vel);
+            std_msgs::Bool button_msg;
+            button_msg.data = msg.button_state;
+            emergency_button.publish(button_msg);
 
             // Process encoder values and update odometry
             on_encoder_update (msg.wheelR_cnt, msg.wheelL_cnt);

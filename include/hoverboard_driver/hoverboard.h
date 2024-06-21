@@ -45,6 +45,7 @@ public:
     ros::Publisher voltage_pub;
     ros::Publisher temp_pub;
     ros::Publisher connected_pub;
+    ros::Publisher emergency_button;
 
     double wheel_radius;
     double max_velocity = 0.0;
