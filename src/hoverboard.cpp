@@ -42,10 +42,21 @@ Hoverboard::Hoverboard() {
     connected_pub = nh.advertise<std_msgs::Bool>("hoverboard/connected", 3);
     emergency_button = nh.advertise<std_msgs::Bool>("emergency_button",0,true);
 
+    double LF, LP, LI, LD, RF, RP, RI, RD;
+
     std::size_t error = 0;
     error += !rosparam_shortcuts::get("hoverboard_driver", nh, "hoverboard_velocity_controller/wheel_radius", wheel_radius);
     error += !rosparam_shortcuts::get("hoverboard_driver", nh, "hoverboard_velocity_controller/linear/x/max_velocity", max_velocity);
     error += !rosparam_shortcuts::get("hoverboard_driver", nh, "robaka/direction", direction_correction);
+    
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/left/F", LF);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/left/P", LP);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/left/I", LI);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/left/D", LD);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/right/F", RF);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/right/P", RP);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/right/I", RI);
+    error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/right/D", RD);
     rosparam_shortcuts::shutdownIfError("hoverboard_driver", error);
 
     if (!rosparam_shortcuts::get("hoverboard_driver", nh, "port", port)) {
@@ -66,9 +77,9 @@ Hoverboard::Hoverboard() {
     ros::NodeHandle nh_left(nh, "pid/left");
     ros::NodeHandle nh_right(nh, "pid/right");
     // Init PID controller
-    pids[0].init(nh_left, 1.0, 0.0, 0.0, 0.01, 1.5, -1.5, true, max_velocity, -max_velocity);
+    pids[0].init(nh_left, LF, LP, LI, LD, 1.5, -1.5, true, max_velocity, -max_velocity);
     pids[0].setOutputLimits(-max_velocity, max_velocity);
-    pids[1].init(nh_right, 1.0, 0.0, 0.0, 0.01, 1.5, -1.5, true, max_velocity, -max_velocity);
+    pids[1].init(nh_right, RF, RP, RI, RD, 1.5, -1.5, true, max_velocity, -max_velocity);
     pids[1].setOutputLimits(-max_velocity, max_velocity);
 
     if ((port_fd = open(port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY)) < 0) {
