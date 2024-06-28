@@ -59,6 +59,8 @@ Hoverboard::Hoverboard() {
     error += !rosparam_shortcuts::get("hoverboard_driver", nh, "PID/right/D", RD);
     rosparam_shortcuts::shutdownIfError("hoverboard_driver", error);
 
+    ROS_ERROR("P LEFT: %f, P RIGHT: %f", LP, RP);
+
     if (!rosparam_shortcuts::get("hoverboard_driver", nh, "port", port)) {
         port = DEFAULT_PORT;
         ROS_WARN("Port is not set in config, using default %s", port.c_str());
