@@ -178,7 +178,7 @@ void Hoverboard::protocol_recv (char byte) {
             vel_pub[0].publish(joints[0].vel);
             vel_pub[1].publish(joints[1].vel);
             std_msgs::Bool button_msg;
-            button_msg.data = msg.button_state;
+            button_msg.data = !msg.button_state;
             emergency_button.publish(button_msg);
 
             // Process encoder values and update odometry
