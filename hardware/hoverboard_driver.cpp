@@ -398,7 +398,8 @@ namespace hoverboard_driver
                                      msg.wheelL_cnt ^
                                      msg.batVoltage ^
                                      msg.boardTemp ^
-                                     msg.cmdLed);
+                                     msg.cmdLed ^
+                                     msg.button_state);
 
       if (msg.start == START_FRAME && msg.checksum == checksum)
       {
