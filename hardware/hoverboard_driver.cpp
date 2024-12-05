@@ -45,6 +45,7 @@ namespace hoverboard_driver
     // curr_pub[left_wheel] = this->create_publisher<std_msgs::msg::Float64>("hoverboard/left_wheel/dc_current", 3);
     // curr_pub[right_wheel] = this->create_publisher<std_msgs::msg::Float64>("hoverboard/right_wheel/dc_current", 3);
     connected_pub = this->create_publisher<std_msgs::msg::Bool>("hoverboard/connected", 3);
+    button_pub = this->create_publisher<std_msgs::msg::Bool>("emergency_button",0)
 
     declare_parameter("f", 10.2);
     declare_parameter("p", 1.0);
@@ -106,6 +107,13 @@ namespace hoverboard_driver
     std_msgs::msg::Float64 f;
     f.data = message;
     temp_pub->publish(f);
+  }
+
+  void hoverboard_driver_node::publish_button_state(bool message)
+  {
+    std_msgs::msg::Bool b;
+    b.data = message;
+    button_pub->publish(b);
   }
 
   void hoverboard_driver_node::publish_connected(bool message)
@@ -414,6 +422,7 @@ namespace hoverboard_driver
         hw_velocities_[right_wheel] = direction_correction * (abs(msg.speedR_meas) * 0.10472);
         hardware_publisher->publish_vel(left_wheel, hw_velocities_[left_wheel]);
         hardware_publisher->publish_vel(right_wheel, hw_velocities_[right_wheel]);
+        hardware_publisher->publish_button_state(msg.button_state);
 
         // Process encoder values and update odometry
         on_encoder_update(time, msg.wheelR_cnt, msg.wheelL_cnt);
@@ -541,7 +550,7 @@ namespace hoverboard_driver
     hw_positions_[right_wheel] = 2.0 * M_PI * lastPubPosR / (double)TICKS_PER_ROTATION;
 
     hardware_publisher->publish_pos(left_wheel, hw_positions_[left_wheel]);
-    hardware_publisher->publish_pos(right_wheel, hw_positions_[right_wheel]);
+    hardware_publisher->publish_pos(right_wheel, hw_positions_[right_wheel]
   }
 
 } // namespace hoverboard_driver

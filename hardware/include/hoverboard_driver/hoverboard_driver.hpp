@@ -82,6 +82,9 @@ namespace hoverboard_driver
     /// @param message value to publish
     void publish_temp(double message);
 
+    /// @brief publish emergency button state
+    /// @param message value to publish
+    void publish_button_state(bool msg);
 
     /// @brief publish state of PCB (on or off)
     /// @param message value to publish
@@ -114,6 +117,7 @@ namespace hoverboard_driver
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr curr_pub[2];
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr temp_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr connected_pub;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr button_pub;
 
         // Parameter Callback handle
     OnSetParametersCallbackHandle::SharedPtr callback_handle_;
