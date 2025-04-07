@@ -26,7 +26,7 @@ typedef struct {
    int16_t  boardTemp;
    uint16_t cmdLed;
    uint16_t checksum;
-   uint8_t button_state;
+   uint16_t button_state;
 } SerialFeedback;
 
 #endif
